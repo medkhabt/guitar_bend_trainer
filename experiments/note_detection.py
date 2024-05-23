@@ -14,9 +14,9 @@ def dat_file_format(res, file_name=""):
         printer = lambda text: file.write(text + '\n')  
     else : 
         printer = print
-    printer("note classic_diff adapter_diff lib_diff first_10_frames_lib_diff freq")
+    printer("note classic_diff adapter_diff lib_diff first_10_frames_lib_diff freq classic adapter lib first_10_frames_lib")
     for v in res:
-        printer(f"{v['note']} {v['classic']['diff']:.3f} {v['adapted']['diff']:.3f} {v['lib']['diff']:.3f} {v['lib_1_frame']['diff']:.3f} {v['freq']}")
+        printer(f"{v['note']} {v['classic']['diff']:.3f} {v['adapted']['diff']:.3f} {v['lib']['diff']:.3f} {v['lib_1_frame']['diff']:.3f} {v['freq']:.3f} {v['classic']['value']:.3f} {v['adapted']['value']:.3f} {v['lib']['value']:.3f} {v['lib_1_frame']['value']:.3f}")
 def print_result(res):      
     for v in res:
         print(f"note : {v['note']} ; classic : value = {v['classic']['value']}, diff = {v['classic']['diff']} ; adapted : value = {v['adapted']['value']} , diff = {v['adapted']['diff'] }");
@@ -52,9 +52,9 @@ def main():
         classic_zcr = frequency_zcr_classic(sig, sr)
         adapted_zcr = frequency_zcr_adapted(sig, sr) 
         lib_zcr_vect = librosa.feature.zero_crossing_rate(sig)
-        lib_zcr = lib_zcr_vect.mean() 
-        first_10_frames_lib_zcr = lib_zcr_vect[0,10] 
-        res.append({'note': k, 'freq' : v['freq'] , 'classic' : { 'value' : classic_zcr, 'diff': abs(v['freq'] - classic_zcr)  } , 'adapted' : { 'value' : adapted_zcr, 'diff' :  abs(v['freq'] - adapted_zcr)}, 'lib' : { 'value' : lib_zcr, 'diff' :  abs(v['freq'] - lib_zcr)} , 'lib_1_frame' : { 'value' : first_10_frames_lib_zcr, 'diff' :  abs(v['freq'] - first_frame_lib_zcr)}})
+        lib_zcr = lib_zcr_vect.mean() * sr / 2  
+        first_10_frames_lib_zcr = lib_zcr_vect[0,10] * sr / 2 
+        res.append({'note': k, 'freq' : v['freq'] , 'classic' : { 'value' : classic_zcr, 'diff': abs(v['freq'] - classic_zcr)  } , 'adapted' : { 'value' : adapted_zcr, 'diff' :  abs(v['freq'] - adapted_zcr)}, 'lib' : { 'value' : lib_zcr, 'diff' :  abs(v['freq'] - lib_zcr)} , 'lib_1_frame' : { 'value' : first_10_frames_lib_zcr, 'diff' :  abs(v['freq'] - first_10_frames_lib_zcr)}})
         ## Plotting the waves 
         plt.figure(figsize=(10,7))
         librosa.display.waveshow(sig, alpha=0.5)

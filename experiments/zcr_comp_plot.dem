@@ -4,6 +4,9 @@ set output "experiments/comparing_zcr_methods.png"
 set title "Comparing the accuracy of zcr methods" 
 set datafile missing "-"
 set key noenhanced
+# set logscale y 2
+set xlabel "note"
+set ylabel "error(Hz)"
 
 set style data linespoints 
 plot 'experiments/comparing_zcr_methods.dat' using 2:xtic(1) title columnheader(2), 'experiments/comparing_zcr_methods.dat' using 3:xtic(1) title columnheader(3), 'experiments/comparing_zcr_methods.dat' using 4:xtic(1) title columnheader(4), 'experiments/comparing_zcr_methods.dat' using 5:xtic(1) title columnheader(5)
