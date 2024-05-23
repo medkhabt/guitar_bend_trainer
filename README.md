@@ -14,6 +14,7 @@ It looks like the adapter is the most accurate method out of the 4 .
 but just calculating the diff between the real frequency of the pitch and the frequency calculated by the method is not enough to determine which method is better. 
 As Human perception of pitch is logarithmic (base 2) rather than linear, the error depends also on the frequency value. 
 Instead of re-calculating the error taking in consideration the real frequency of a pitch, I opted for plotting the pitch freqency and the frequencies calculated by different method, and present them on a $log_2$ scale. We can notice that the 'adapted' method from the paper is always the most accurate.  
+
 ![Compare freqencies](experiments/pitch_freq_plot_zcr.png)
 
  But still the results are not promessing. So using ZCR is not really viable for me. 
