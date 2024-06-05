@@ -18,6 +18,15 @@ Instead of re-calculating the error taking in consideration the real frequency o
 ![Compare freqencies](experiments/pitch_freq_plot_zcr.png)
 
  But still the results are not promessing. So using ZCR is not really viable for me. 
+
+
+## Directions and Questions 
+
+- Do i need to detect the harmonics? Do they have a role in affecting the feeling of a bend ? 
+- variying the sampling rate, depending on the instrument ( each instrument has a max frequency that can generate ), or can we have less
+consuming method to define roughly the freq range of the wavesound so we can decrease the sampling rate for more speed and more 'accuracy' ? 
+- Test if low frequency can be detected with better frequency.
+
 # References
 [1] R. G. Amado and J. V. Filho, "Pitch detection algorithms based on zero-cross rate and autocorrelation function for musical notes," 2008 International Conference on Audio, Language and Image Processing, Shanghai, China, 2008, pp. 449-454, doi: 10.1109/ICALIP.2008.4590188. 
 

@@ -3,20 +3,18 @@ import librosa.display
 import IPython.display as ipd
 import matplotlib.pyplot as plt 
 import numpy as np
-
-
+#from note_detection.autocorrelation import acf
 from note_detection.zcr import frequency_zcr_classic, frequency_zcr_adapted
 
 def dat_file_format(res, file_name=""):
     file = open('experiments/' + file_name + '.dat', 'w')
     if file_name: 
-        print("are we here") 
         printer = lambda text: file.write(text + '\n')  
     else : 
         printer = print
-    printer("note classic_diff adapter_diff lib_diff first_10_frames_lib_diff freq classic adapter lib first_10_frames_lib")
+    printer("note classic_diff adapter_diff lib_diff first_half_frames_lib_diff freq classic adapter lib first_half_frames_lib")
     for v in res:
-        printer(f"{v['note']} {v['classic']['diff']:.3f} {v['adapted']['diff']:.3f} {v['lib']['diff']:.3f} {v['lib_1_frame']['diff']:.3f} {v['freq']:.3f} {v['classic']['value']:.3f} {v['adapted']['value']:.3f} {v['lib']['value']:.3f} {v['lib_1_frame']['value']:.3f}")
+        printer(f"{v['note']} {v['classic']['diff']:.3f} {v['adapted']['diff']:.3f} {v['lib']['diff']:.3f} {v['lib_first_half_frames']['diff']:.3f} {v['freq']:.3f} {v['classic']['value']:.3f} {v['adapted']['value']:.3f} {v['lib']['value']:.3f} {v['lib_first_half_frames']['value']:.3f}")
 def print_result(res):      
     for v in res:
         print(f"note : {v['note']} ; classic : value = {v['classic']['value']}, diff = {v['classic']['diff']} ; adapted : value = {v['adapted']['value']} , diff = {v['adapted']['diff'] }");
@@ -45,20 +43,26 @@ def main():
     for k, v in files.items():  
 
 ## graph in dbs 
-
-        sig, sr = librosa.load(v['path'])
+        max_freq_guitar = 1300
+        max_freq_instrument = 4186  
+        sr_guitar = max_freq_guitar * 2 + 2;  
+        samples_frame = int(sr_guitar / 100); 
+        sig, _ = librosa.load(v['path'], sr=sr_guitar)
+        N = len(sig)
 ##     calculate the freq from zcr classic and adapt. 
-
-        classic_zcr = frequency_zcr_classic(sig, sr)
-        adapted_zcr = frequency_zcr_adapted(sig, sr) 
-        lib_zcr_vect = librosa.feature.zero_crossing_rate(sig)
-        lib_zcr = lib_zcr_vect.mean() * sr / 2  
-        first_10_frames_lib_zcr = lib_zcr_vect[0,10] * sr / 2 
-        res.append({'note': k, 'freq' : v['freq'] , 'classic' : { 'value' : classic_zcr, 'diff': abs(v['freq'] - classic_zcr)  } , 'adapted' : { 'value' : adapted_zcr, 'diff' :  abs(v['freq'] - adapted_zcr)}, 'lib' : { 'value' : lib_zcr, 'diff' :  abs(v['freq'] - lib_zcr)} , 'lib_1_frame' : { 'value' : first_10_frames_lib_zcr, 'diff' :  abs(v['freq'] - first_10_frames_lib_zcr)}})
+        classic_zcr = frequency_zcr_classic(sig[0:int(N/4)], sr_guitar)
+        adapted_zcr = frequency_zcr_adapted(sig[0:int(N/4)], sr_guitar) 
+        lib_zcr_vect = librosa.feature.zero_crossing_rate(sig[0:int(N/4)], frame_length=samples_frame, hop_length=int(samples_frame/4))
+        lib_zcr = lib_zcr_vect.mean() * sr_guitar / 2  
+        first_half_frames_lib_zcr = lib_zcr_vect[0,int(N/(2*samples_frame))].mean() * sr_guitar / 2 
+        #acf_value, _ = acf(sig)
+        #freq_acf = sr_guitar / acf_value  
+#        print(f"********** the freq_acf is {freq_acf}")
+        res.append({'note': k, 'freq' : v['freq'] , 'classic' : { 'value' : classic_zcr, 'diff': abs(v['freq'] - classic_zcr)  } , 'adapted' : { 'value' : adapted_zcr, 'diff' :  abs(v['freq'] - adapted_zcr)}, 'lib' : { 'value' : lib_zcr, 'diff' :  abs(v['freq'] - lib_zcr)} , 'lib_first_half_frames' : { 'value' : first_half_frames_lib_zcr, 'diff' :  abs(v['freq'] - first_half_frames_lib_zcr)} })
         ## Plotting the waves 
         plt.figure(figsize=(10,7))
         librosa.display.waveshow(sig, alpha=0.5)
-        slice_zcr = sig[0:10*2048]
+        slice_zcr = sig[0:samples_frame*5]
         librosa.display.waveshow(slice_zcr, alpha=0.7, color='r')
         plt.savefig('experiments/waves/' + k) 
     # saving the data 

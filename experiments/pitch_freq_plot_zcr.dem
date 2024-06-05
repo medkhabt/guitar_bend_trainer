@@ -13,4 +13,5 @@ plot 'experiments/comparing_zcr_methods.dat' using 6:xtic(1) title columnheader(
      'experiments/comparing_zcr_methods.dat' using 7:xtic(1) title columnheader(7) lc 2 dt 4 lt 3, \
      'experiments/comparing_zcr_methods.dat' using 8:xtic(1) title columnheader(8) lc 3  dt 4 lt 3, \
      'experiments/comparing_zcr_methods.dat' using 9:xtic(1) title columnheader(9) lc 4  dt 4 lt 3, \
-     'experiments/comparing_zcr_methods.dat' using 10:xtic(1) title columnheader(10) lc 5 dt 4 lt 3
+     'experiments/comparing_zcr_methods.dat' using 10:xtic(1) title columnheader(10) lc 5 dt 4 lt 3, \
+     'experiments/comparing_zcr_methods.dat' using 11:xtic(1) title columnheader(11) lc 6 dt 4 lt 2
